@@ -14,6 +14,11 @@
   <!-- cordova.js required for cordova apps -->
   <script src="cordova.js"></script>
 
+  <!--A-Frame Things -->
+  <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
+  <script src="https://rawgit.com/donmccurdy/aframe-extras/v2.1.1/dist/aframe-extras.loaders.min.js"></script>
+  <script src="https://unpkg.com/aframe-text-component@^0.4.1/dist/aframe-text-component.min.js"></script> 
+
   <!-- un-comment this code to enable service worker
   <script>
     if ('serviceWorker' in navigator) {
@@ -27,15 +32,132 @@
 
 </head>
 <body>
-
   <!-- Ionic's root component and where the app will load -->
   <ion-app></ion-app>
-
   <!-- The polyfills js is generated during the build process -->
   <script src="build/polyfills.js"></script>
-
   <!-- The bundle js is generated during the build process -->
   <script src="build/main.js"></script>
+
+
+  <script>
+    var viewingRoom;
+
+    var lobbyButton;
+    var lobbyTitle;
+
+    function createLobbyObjects(parent){
+      //lobby button
+      lobbyButton = document.createElement('a-entity');
+      lobbyButton.setAttribute('join-lobby', '');
+      lobbyButton.setAttribute('material', 'color', 'green');
+      lobbyButton.setAttribute('position', {x: 0, y: 1.25, z: -4});
+      lobbyButton.setAttribute('geometry', {primitive: 'plane', height: 2, width: 4});
+      parent.appendChild(lobbyButton);
+      //text of lobby//
+      lobbyTitle = document.createElement('a-entity');
+      lobbyTitle.setAttribute('text', {
+        align: 'center',
+        width: 35,
+        value: 'This is the lobby'
+      });
+      lobbyTitle.setAttribute('position', {x: 0, y: 6.25, z: -10});
+      lobbyTitle.setAttribute('color', 'white');
+      parent.appendChild(lobbyTitle);
+    }
+
+    function createViewingRoom(parent){
+      console.log("Trigger this bicth");
+      viewingRoom = document.createElement('a-entity');
+      viewingRoom.setAttribute('obj-model',{
+        obj: "./assets/3d-entities/Walls/Walls.obj",
+        mtl: "./assets/3d-entities/Walls/Walls.mtl"
+      });
+      viewingRoom.setAttribute('scale', "0.03 0.03 0.03");
+      parent.appendChild(viewingRoom);
+
+    }
+
+    //Component Registrations
+    AFRAME.registerComponent('start-app', {
+        schema: {
+          to: {default: '2.5 2.5 2.5'}
+        },
+        init: function () {
+        var data = this.data;
+        
+        this.el.addEventListener('mouseenter', function(){
+          console.log("triggered: hover");
+          this.setAttribute('scale', data.to);
+        });
+
+        this.el.addEventListener('mouseleave', function(){
+          console.log("triggered: leave");
+          this.setAttribute('scale', '1 1 1');
+        });
+        
+
+        this.el.addEventListener('click', function () {
+          console.log("triggered: click");
+          //how to remove an object from the DOM
+          var parent = document.querySelector('a-scene');
+          var child1 = document.querySelector('#ready');
+          var child2 = document.querySelector('#title');
+          var child3 = document.querySelector('#couch');
+          parent.removeChild(child1);
+          parent.removeChild(child2);
+          parent.removeChild(child3);
+
+          //Adding Lobby Elements//
+          createLobbyObjects(parent);
+          
+
+        });
+        }
+    });
+
+
+    AFRAME.registerComponent('join-lobby', {
+        init: function () {
+        console.log("SSStart");
+        var count = 0;
+        this.el.addEventListener('click', function () {
+          if(count > 0){//needed because of weird glitch mechanic
+            console.log("triggered: go to waiting room: " + count);
+            var parent = document.querySelector('a-scene'); 
+            parent.removeChild(lobbyButton);
+            parent.removeChild(lobbyTitle);
+            //insert viewing room stuff -> also http stuff goes where
+            createViewingRoom(parent);
+          }
+          count++;
+        });
+        }
+    });
+</script>
+  <a-scene>
+    <a-assets>
+      <a-asset-item id="CouchObj" src="./assets/3d-entities/Couch/Couch.obj"></a-asset-item>
+      <a-asset-item id="CouchMtl" src="./assets/3d-entities/Couch/Couch.mtl"></a-asset-item>
+      <!--<video id="lowpoly" autoplay loop="true" src="./assets/video/lowpoly.mp4"></video>-->
+    </a-assets>
+    <a-sky color="#6EBAA7"></a-sky>
+
+    <!--Introduction-->
+    <a-entity id = "couch" obj-model="obj: #CouchObj; mtl: #CouchMtl"  scale = "0.03 0.03 0.03" position="-2 0.25 -7"></a-entity>
+    <a-entity id = "title" position="0 6.25 -10" color="white" height="2" text="align: center; width: 35; value: This is the app title"></a-entity>
+    <a-plane id= "ready" position="0 1.25 -5" color="red" height="1.5" width="4" start-app="to: 1.2 1.2 1.2">
+      <a-animation attribute="position" to="0 1.35 -5" direction="alternate" dur="2000"
+      repeat="indefinite"></a-animation>
+    </a-plane>
+    <!--/Introduction-->
+
+    <!--Lobby-->
+    <!--<a-plane id = "lobby" position="0 1.25 -6" color="blue" height="2" width="4" join-lobby></a-plane>-->
+    <a-camera>
+      <a-cursor></a-cursor>
+    </a-camera>
+  </a-scene>
 
 </body>
 </html>
