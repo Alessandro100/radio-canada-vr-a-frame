@@ -1,0 +1,16 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 25.03.2017 10:14:16
+
+newmtl 03___Default
+	Ns 20.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.2500 0.2500 0.2500
+	Kd 0.5000 0.5000 0.5000
+	Ks 0.0072 0.0072 0.0072
+	Ke 0.0000 0.0000 0.0000
+	map_Kd Map__7_Marble.tga
+	map_refl Map__8_Reflect_Refract.tga

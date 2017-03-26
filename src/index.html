@@ -41,19 +41,34 @@
 
 
   <script>
-    var viewingRoom;
+    var parent;
 
+    var viewHolder;//this var acts like a holder
+    var viewingRoom;
+    var viewingFloor;
+    var couch;
+    var videoPlayer;
+    var exitButton;
+
+    var lobbyHolder;//this var acts like a holder
     var lobbyButton;
     var lobbyTitle;
 
-    function createLobbyObjects(parent){
+    function createLobbyObjects(){
+      lobbyHolder = document.createElement('a-entity');
+      parent.appendChild(lobbyHolder);
       //lobby button
       lobbyButton = document.createElement('a-entity');
       lobbyButton.setAttribute('join-lobby', '');
       lobbyButton.setAttribute('material', 'color', 'green');
       lobbyButton.setAttribute('position', {x: 0, y: 1.25, z: -4});
-      lobbyButton.setAttribute('geometry', {primitive: 'plane', height: 2, width: 4});
-      parent.appendChild(lobbyButton);
+      lobbyButton.setAttribute('geometry', {primitive: 'plane', height: 1.25, width: 6});
+      lobbyButton.setAttribute('text', {
+        align: 'center',
+        value: 'Traveling Cultures',
+        width: 10
+      });
+      lobbyHolder.appendChild(lobbyButton);
       //text of lobby//
       lobbyTitle = document.createElement('a-entity');
       lobbyTitle.setAttribute('text', {
@@ -63,19 +78,68 @@
       });
       lobbyTitle.setAttribute('position', {x: 0, y: 6.25, z: -10});
       lobbyTitle.setAttribute('color', 'white');
-      parent.appendChild(lobbyTitle);
+      lobbyHolder.appendChild(lobbyTitle);
     }
 
-    function createViewingRoom(parent){
+    function createViewingRoom(){
+      viewHolder = document.createElement('a-entity');
+      parent.appendChild(viewHolder);
       console.log("Trigger this bicth");
+
+      //The viewing room
       viewingRoom = document.createElement('a-entity');
       viewingRoom.setAttribute('obj-model',{
-        obj: "./assets/3d-entities/Walls/Walls.obj",
-        mtl: "./assets/3d-entities/Walls/Walls.mtl"
+        obj: "#WallObj",
+        mtl: "#WallMtl"
       });
+      viewingRoom.setAttribute('position', {x: 0, y: -36.6, z: 0});
+      viewingRoom.setAttribute('rotation', {x: 0, y: 180, z: 0});
       viewingRoom.setAttribute('scale', "0.03 0.03 0.03");
-      parent.appendChild(viewingRoom);
+      viewHolder.appendChild(viewingRoom);
+      //the viewingFloor
+      viewingFloor = document.createElement('a-entity');
+      viewingFloor.setAttribute('obj-model',{
+        obj: "#FloorObj",
+        mtl: "#FloorMtl"
+      });
+      viewingFloor.setAttribute('position', {x: 0, y: -1.6, z: 0});
+      viewingFloor.setAttribute('scale', "0.03 0.03 0.03");
+      viewHolder.appendChild(viewingFloor);
 
+      //the couch
+      couch = document.createElement('a-entity');
+      couch.setAttribute('obj-model',{
+        obj: "#CouchObj",
+        mtl: "#CouchMtl"
+      });
+      couch.setAttribute('position', {x: 1, y: -1.5, z: -2});
+      couch.setAttribute('scale', "0.015 0.015 0.015");
+      couch.setAttribute('rotation', {x: 0, y: 180, z: 0});
+      viewHolder.appendChild(couch);
+
+      //the video player
+      videoPlayer = document.createElement('a-video');
+      videoPlayer.setAttribute('scale', "3.2 3.2 3.2");
+      videoPlayer.setAttribute('position', {x: 0, y: 12, z: -28});
+      videoPlayer.setAttribute('height', 9);
+      videoPlayer.setAttribute('width', 16);
+      videoPlayer.setAttribute('autoplay',"false");
+      videoPlayer.setAttribute('src', './assets/video/Nature.mp4');
+      viewHolder.appendChild(videoPlayer);
+
+      //exit object
+      exitButton = document.createElement('a-entity');
+      exitButton.setAttribute('exit-lobby', '');
+      exitButton.setAttribute('material', 'color', 'purple');
+      exitButton.setAttribute('position', {x: 0, y: 4.25, z: 6});
+      exitButton.setAttribute('rotation', {x: 0, y: 180, z: 0});
+      exitButton.setAttribute('geometry', {primitive: 'plane', height: 1.5, width: 6});
+      exitButton.setAttribute('text', {
+        align: 'center',
+        value: 'Back To Lobby',
+        width: 10
+      });
+      viewHolder.appendChild(exitButton);
     }
 
     //Component Registrations
@@ -85,7 +149,7 @@
         },
         init: function () {
         var data = this.data;
-        
+        parent = document.querySelector('a-scene'); //needed keep this one
         this.el.addEventListener('mouseenter', function(){
           console.log("triggered: hover");
           this.setAttribute('scale', data.to);
@@ -100,35 +164,49 @@
         this.el.addEventListener('click', function () {
           console.log("triggered: click");
           //how to remove an object from the DOM
-          var parent = document.querySelector('a-scene');
-          var child1 = document.querySelector('#ready');
-          var child2 = document.querySelector('#title');
-          var child3 = document.querySelector('#couch');
-          parent.removeChild(child1);
-          parent.removeChild(child2);
-          parent.removeChild(child3);
-
-          //Adding Lobby Elements//
+          var introHolder = document.querySelector('#introduction');
+          parent.removeChild(introHolder);
           createLobbyObjects(parent);
-          
-
         });
         }
     });
 
-
     AFRAME.registerComponent('join-lobby', {
         init: function () {
-        console.log("SSStart");
+        console.log("Ayy lmao");
         var count = 0;
         this.el.addEventListener('click', function () {
           if(count > 0){//needed because of weird glitch mechanic
-            console.log("triggered: go to waiting room: " + count);
-            var parent = document.querySelector('a-scene'); 
-            parent.removeChild(lobbyButton);
-            parent.removeChild(lobbyTitle);
+            parent.removeChild(lobbyHolder);
             //insert viewing room stuff -> also http stuff goes where
             createViewingRoom(parent);
+            //start playing the video right here!
+            videoPlayer.play();
+          }
+          count++;
+        });
+
+        this.el.addEventListener('mouseenter', function(){
+          console.log("triggered: hover");
+          this.setAttribute('scale', '1.2 1.2 1.2');
+        });
+
+        this.el.addEventListener('mouseleave', function(){
+          console.log("triggered: leave");
+          this.setAttribute('scale', '1 1 1');
+        });
+        }
+    });
+
+    AFRAME.registerComponent('exit-lobby', {
+        init: function () {
+        var count = 0;
+        this.el.addEventListener('click', function () {
+          console.log("Exit Please");
+          if(count > 0){//needed because of weird glitch mechanic
+            parent.remove(viewHolder);
+            //insert lobby room stuff
+            createLobbyObjects(parent);
           }
           count++;
         });
@@ -139,17 +217,35 @@
     <a-assets>
       <a-asset-item id="CouchObj" src="./assets/3d-entities/Couch/Couch.obj"></a-asset-item>
       <a-asset-item id="CouchMtl" src="./assets/3d-entities/Couch/Couch.mtl"></a-asset-item>
-      <!--<video id="lowpoly" autoplay loop="true" src="./assets/video/lowpoly.mp4"></video>-->
+      <video id="vid" loop="true" src="./assets/video/Nature.mp4"></video>
+      <a-asset-item id="WallObj" src="./assets/3d-entities/Walls/Walls.obj"></a-asset-item>
+      <a-asset-item id="WallMtl" src="./assets/3d-entities/Walls/Walls.mtl"></a-asset-item>
+      <a-asset-item id="FloorObj" src="./assets/3d-entities/Walls/Floor.obj"></a-asset-item>
+      <a-asset-item id="FloorMtl" src="./assets/3d-entities/Walls/Floor.mtl"></a-asset-item>
+
+      <a-asset-item id="InnerObj" src="./assets/3d-entities/Lobby/Inner.obj"></a-asset-item>
+      <a-asset-item id="InnerMtl" src="./assets/3d-entities/Lobby/Inner.mtl"></a-asset-item>
+      <a-asset-item id="LogoObj" src="./assets/3d-entities/Lobby/Logo.obj"></a-asset-item>
+      <a-asset-item id="LogoMtl" src="./assets/3d-entities/Lobby/Logo.mtl"></a-asset-item>
+      <a-asset-item id="OuterObj" src="./assets/3d-entities/Lobby/Outer.obj"></a-asset-item>
+      <a-asset-item id="OuterMtl" src="./assets/3d-entities/Lobby/Outer.mtl"></a-asset-item>
+
     </a-assets>
     <a-sky color="#6EBAA7"></a-sky>
 
+    
     <!--Introduction-->
-    <a-entity id = "couch" obj-model="obj: #CouchObj; mtl: #CouchMtl"  scale = "0.03 0.03 0.03" position="-2 0.25 -7"></a-entity>
-    <a-entity id = "title" position="0 6.25 -10" color="white" height="2" text="align: center; width: 35; value: This is the app title"></a-entity>
-    <a-plane id= "ready" position="0 1.25 -5" color="red" height="1.5" width="4" start-app="to: 1.2 1.2 1.2">
-      <a-animation attribute="position" to="0 1.35 -5" direction="alternate" dur="2000"
-      repeat="indefinite"></a-animation>
-    </a-plane>
+    <a-entity id = "introduction">
+      <a-entity  obj-model="obj: #InnerObj; mtl: #InnerMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
+      <a-entity  obj-model="obj: #LogoObj; mtl: #LogoMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
+      <a-entity  obj-model="obj: #OuterObj; mtl: #OuterMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
+      <a-entity id = "couch" obj-model="obj: #CouchObj; mtl: #CouchMtl"  scale = "0.03 0.03 0.03" position="-2 0.25 -7"></a-entity>
+      <a-entity id = "title" position="0 6.25 -10" color="white" height="2" text="align: center; width: 35; value: V5"></a-entity>
+      <a-plane id= "ready" position="0 1.25 -5" color="red" height="1.5" width="4" start-app="to: 1.2 1.2 1.2" text="align: center; width: 10; value: Start" opacity= "0.5">
+        <a-animation attribute="position" to="0 1.35 -5" direction="alternate" dur="2000"
+        repeat="indefinite"></a-animation>
+      </a-plane>
+    </a-entity>
     <!--/Introduction-->
 
     <!--Lobby-->

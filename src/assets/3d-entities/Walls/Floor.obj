@@ -1,0 +1,30 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 25.03.2017 10:14:16
+
+mtllib Floor.mtl
+
+#
+# object Floor
+#
+
+v  -780.6592 27.4704 979.6733
+v  786.2119 27.4704 979.6733
+v  786.2119 27.4703 -868.1482
+v  -780.6592 27.4703 -868.1482
+# 4 vertices
+
+vn -0.0000 1.0000 0.0000
+# 1 vertex normals
+
+vt 1.0000 0.0000 0.0000
+vt 0.0000 0.0000 0.0000
+vt 0.0000 1.0000 0.0000
+vt 1.0000 1.0000 0.0000
+# 4 texture coords
+
+g Floor
+usemtl 03___Default
+s 2
+f 1/1/1 2/2/1 3/3/1 4/4/1 
+# 1 polygons
+
