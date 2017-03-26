@@ -46,6 +46,7 @@
     var viewHolder;//this var acts like a holder
     var viewingRoom;
     var viewingFloor;
+    var avatar;
     var couch;
     var videoPlayer;
     var exitButton;
@@ -60,7 +61,7 @@
       //lobby button
       lobbyButton = document.createElement('a-entity');
       lobbyButton.setAttribute('join-lobby', '');
-      lobbyButton.setAttribute('material', 'color', 'green');
+      lobbyButton.setAttribute('material', 'color', '#ba0000');
       lobbyButton.setAttribute('position', {x: 0, y: 1.25, z: -4});
       lobbyButton.setAttribute('geometry', {primitive: 'plane', height: 1.25, width: 6});
       lobbyButton.setAttribute('text', {
@@ -77,7 +78,7 @@
         value: 'Video Selection'
       });
       lobbyTitle.setAttribute('position', {x: 0, y: 6.25, z: -10});
-      lobbyTitle.setAttribute('color', 'white');
+      lobbyTitle.setAttribute('color', 'black');
       lobbyHolder.appendChild(lobbyTitle);
     }
 
@@ -85,6 +86,17 @@
       viewHolder = document.createElement('a-entity');
       parent.appendChild(viewHolder);
       console.log("Trigger this bicth");
+
+      //avatar
+      avatar = document.createElement('a-entity');
+      avatar.setAttribute('obj-model',{
+        obj: "#A1Obj",
+        mtl: "#A1Mtl"
+      });
+      avatar.setAttribute('position', {x: 0.55, y: 0, z: -2.5});
+      avatar.setAttribute('rotation', {x: 0, y: 270, z: 0});
+      avatar.setAttribute('scale', "0.02 0.02 0.02");
+      viewHolder.appendChild(avatar);
 
       //The viewing room
       viewingRoom = document.createElement('a-entity');
@@ -225,42 +237,46 @@
 
       <a-asset-item id="InnerObj" src="./assets/3d-entities/Lobby/Inner.obj"></a-asset-item>
       <a-asset-item id="InnerMtl" src="./assets/3d-entities/Lobby/Inner.mtl"></a-asset-item>
-      <a-asset-item id="LogoObj" src="./assets/3d-entities/Lobby/logo.obj"></a-asset-item>
-      <a-asset-item id="LogoMtl" src="./assets/3d-entities/Lobby/logo.mtl"></a-asset-item>
       <a-asset-item id="OuterObj" src="./assets/3d-entities/Lobby/outer.obj"></a-asset-item>
       <a-asset-item id="OuterMtl" src="./assets/3d-entities/Lobby/outer.mtl"></a-asset-item>
 
+      <a-asset-item id="RCObj" src="./assets/3d-entities/Logo/Radio_Canada.obj"></a-asset-item>
+      <a-asset-item id="RCMtl" src="./assets/3d-entities/Logo/Radio_Canada.mtl"></a-asset-item>
+
+      <a-asset-item id="A1Obj" src="./assets/3d-entities/Avatar/Avatar.obj"></a-asset-item>
+      <a-asset-item id="A1Mtl" src="./assets/3d-entities/Avatar/Avatar.mtl"></a-asset-item>
+
+
+      <img id="sky-img" src="https://kuula.co/share/7ftsZ">
+      <img id="logo-img" src="./assets/3d-entities/Logo/R5_Flat.png">
+
     </a-assets>
-    <a-sky color="#6EBAA7"></a-sky>
+    <a-sky color="#ADD8E6"></a-sky>
+    <!--<a-sky src = "#sky-img"></a-sky>-->
+    <a-entity light="type: ambient; color: #BBB"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1.6 1"></a-entity>
 
     
     <!--Introduction-->
     <a-entity id = "introduction">
-      <!--
-      <a-entity  obj-model="obj: #InnerObj; mtl: #InnerMtl" rotation = "0 180 0" scale = "0.0025 0.0025 0.0025" position="-1.25 0.7 -1.75"></a-entity>
-      <a-entity  obj-model="obj: #LogoObj; mtl: #LogoMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
-      <a-entity  obj-model="obj: #OuterObj; mtl: #OuterMtl" rotation = "0 180 0" scale = "0.0025 0.0025 0.0025" position="-1.25 0.7 -1.75"></a-entity>
-      -->
-      <a-entity  obj-model="obj: #InnerObj; mtl: #InnerMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
-      <a-entity  obj-model="obj: #LogoObj; mtl: #LogoMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
-      <a-entity  obj-model="obj: #OuterObj; mtl: #OuterMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
 
-      <a-entity id = "couch" obj-model="obj: #CouchObj; mtl: #CouchMtl"  scale = "0.03 0.03 0.03" position="-2 0.25 -7"></a-entity>
-      <a-entity id = "title" position="0 6.25 -10" color="white" height="2" text="align: center; width: 35; value: V5"></a-entity>
-      <a-plane id= "ready" position="0 1.25 -5" color="red" height="1.5" width="4" start-app="to: 1.2 1.2 1.2" text="align: center; width: 10; value: Start" opacity= "0.5">
-        <a-animation attribute="position" to="0 1.35 -5" direction="alternate" dur="2000"
+      <a-entity  obj-model="obj: #A1Obj; mtl: #A1Mtl" rotation = "0 0 0" scale = "0.012 0.012 0.012" position="0 0.6 -1.2"></a-entity>
+
+      <a-entity  obj-model="obj: #InnerObj; mtl: #InnerMtl" rotation = "0 180 0" scale = "0.0025 0.0025 0.0025" position="-1.25 0.7 -1.75"></a-entity>
+      <a-entity  obj-model="obj: #RCObj; mtl: #RCMtl" rotation = "90 125 0" scale = "0.0005 0.0005 0.0005" position="2.6 1 -1.5"></a-entity>
+      <a-entity  obj-model="obj: #OuterObj; mtl: #OuterMtl" rotation = "0 180 0" scale = "0.0025 0.003 0.0025" position="-1.25 0.7 -1.75"></a-entity>
+
+      <!--<a-entity id = "title" position="0 6.25 -5" color="white" height="2" text="align: center; width: 35; value: V5"></a-entity>-->
+      <a-image src="#logo-img"  position="0 4.5 -3.5" height="2" width = "6"></a-image>
+      <a-plane id= "ready" rotation = "0 20 0" position="-0.7 1.60 -2" color="#ba0000" height="0.5" width="1.5" start-app="to: 1.2 1.2 1.2" text="align: center; width: 10; value: Start" opacity= "0.5">
+        <a-animation attribute="position" to="-.7 1.65 -2" direction="alternate" dur="1500"
         repeat="indefinite"></a-animation>
       </a-plane>
     </a-entity>
     <!--/Introduction-->
-
-    <!--Lobby-->
-    <!--<a-plane id = "lobby" position="0 1.25 -6" color="blue" height="2" width="4" join-lobby></a-plane>-->
     <a-camera>
       <a-cursor id = "cursor"></a-cursor>
     </a-camera>
-
-
   </a-scene>
 
 </body>
