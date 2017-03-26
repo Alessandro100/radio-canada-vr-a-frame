@@ -74,7 +74,7 @@
       lobbyTitle.setAttribute('text', {
         align: 'center',
         width: 35,
-        value: 'This is the lobby'
+        value: 'Video Selection'
       });
       lobbyTitle.setAttribute('position', {x: 0, y: 6.25, z: -10});
       lobbyTitle.setAttribute('color', 'white');
@@ -92,9 +92,9 @@
         obj: "#WallObj",
         mtl: "#WallMtl"
       });
-      viewingRoom.setAttribute('position', {x: 0, y: -36.6, z: 0});
+      viewingRoom.setAttribute('position', {x: -23, y: -1, z: 0});
       viewingRoom.setAttribute('rotation', {x: 0, y: 180, z: 0});
-      viewingRoom.setAttribute('scale', "0.03 0.03 0.03");
+      viewingRoom.setAttribute('scale', "0.013 0.013 0.013");
       viewHolder.appendChild(viewingRoom);
       //the viewingFloor
       viewingFloor = document.createElement('a-entity');
@@ -119,8 +119,8 @@
 
       //the video player
       videoPlayer = document.createElement('a-video');
-      videoPlayer.setAttribute('scale', "3.2 3.2 3.2");
-      videoPlayer.setAttribute('position', {x: 0, y: 12, z: -28});
+      videoPlayer.setAttribute('scale', "2 2 2");
+      videoPlayer.setAttribute('position', {x: 0, y: 8.2, z: -12});
       videoPlayer.setAttribute('height', 9);
       videoPlayer.setAttribute('width', 16);
       videoPlayer.setAttribute('autoplay',"false");
@@ -225,10 +225,10 @@
 
       <a-asset-item id="InnerObj" src="./assets/3d-entities/Lobby/Inner.obj"></a-asset-item>
       <a-asset-item id="InnerMtl" src="./assets/3d-entities/Lobby/Inner.mtl"></a-asset-item>
-      <a-asset-item id="LogoObj" src="./assets/3d-entities/Lobby/Logo.obj"></a-asset-item>
-      <a-asset-item id="LogoMtl" src="./assets/3d-entities/Lobby/Logo.mtl"></a-asset-item>
-      <a-asset-item id="OuterObj" src="./assets/3d-entities/Lobby/Outer.obj"></a-asset-item>
-      <a-asset-item id="OuterMtl" src="./assets/3d-entities/Lobby/Outer.mtl"></a-asset-item>
+      <a-asset-item id="LogoObj" src="./assets/3d-entities/Lobby/logo.obj"></a-asset-item>
+      <a-asset-item id="LogoMtl" src="./assets/3d-entities/Lobby/logo.mtl"></a-asset-item>
+      <a-asset-item id="OuterObj" src="./assets/3d-entities/Lobby/outer.obj"></a-asset-item>
+      <a-asset-item id="OuterMtl" src="./assets/3d-entities/Lobby/outer.mtl"></a-asset-item>
 
     </a-assets>
     <a-sky color="#6EBAA7"></a-sky>
@@ -236,9 +236,15 @@
     
     <!--Introduction-->
     <a-entity id = "introduction">
+      <!--
+      <a-entity  obj-model="obj: #InnerObj; mtl: #InnerMtl" rotation = "0 180 0" scale = "0.0025 0.0025 0.0025" position="-1.25 0.7 -1.75"></a-entity>
+      <a-entity  obj-model="obj: #LogoObj; mtl: #LogoMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
+      <a-entity  obj-model="obj: #OuterObj; mtl: #OuterMtl" rotation = "0 180 0" scale = "0.0025 0.0025 0.0025" position="-1.25 0.7 -1.75"></a-entity>
+      -->
       <a-entity  obj-model="obj: #InnerObj; mtl: #InnerMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
       <a-entity  obj-model="obj: #LogoObj; mtl: #LogoMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
       <a-entity  obj-model="obj: #OuterObj; mtl: #OuterMtl" rotation = "90 180 0" scale = "0.0015 0.0015 0.0015" position="-0.75 5.25 -10"></a-entity>
+
       <a-entity id = "couch" obj-model="obj: #CouchObj; mtl: #CouchMtl"  scale = "0.03 0.03 0.03" position="-2 0.25 -7"></a-entity>
       <a-entity id = "title" position="0 6.25 -10" color="white" height="2" text="align: center; width: 35; value: V5"></a-entity>
       <a-plane id= "ready" position="0 1.25 -5" color="red" height="1.5" width="4" start-app="to: 1.2 1.2 1.2" text="align: center; width: 10; value: Start" opacity= "0.5">
@@ -251,8 +257,10 @@
     <!--Lobby-->
     <!--<a-plane id = "lobby" position="0 1.25 -6" color="blue" height="2" width="4" join-lobby></a-plane>-->
     <a-camera>
-      <a-cursor></a-cursor>
+      <a-cursor id = "cursor"></a-cursor>
     </a-camera>
+
+
   </a-scene>
 
 </body>
